@@ -1,7 +1,7 @@
 from user.serializers import CustomTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
@@ -14,6 +14,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     
     
 class UserView(APIView):
+    
     def post(self, request):
         serializer = CreateUserSerializer(data = request.data)
         if serializer.is_valid():
@@ -23,6 +24,8 @@ class UserView(APIView):
     
 
 class UserInfoView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
     def get(self, request):
         user = User.objects.all()
         serializer = UserSerializer(user, many = True)
